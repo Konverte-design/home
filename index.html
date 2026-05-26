@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konverte — Como podemos te ajudar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #6EDA45;
+      --purple: #7B5EA7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS ── */
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 24px 40px;
+      overflow: hidden;
+    }
+
+    /* glow de fundo */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(ellipse at center, rgba(110,218,69,0.18) 0%, transparent 68%);
+      pointer-events: none;
+    }
+
+    /* nav */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 32px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+      backdrop-filter: blur(0px);
+    }
+
+    .logo {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* headline */
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 7.5vw, 82px);
+      font-weight: 900;
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    /* palavra animada */
+    .word-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .word-highlight {
+      color: var(--green);
+      position: relative;
+      display: inline-block;
+      text-shadow:
+        0 0 14px rgba(110,218,69,0.4),
+        0 0 32px rgba(110,218,69,0.15);
+      animation: wordGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes wordGlow {
+      0%, 100% {
+        text-shadow: 0 0 12px rgba(110,218,69,0.3), 0 0 28px rgba(110,218,69,0.1);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(110,218,69,0.55), 0 0 45px rgba(110,218,69,0.25), 0 0 80px rgba(110,218,69,0.1);
+      }
+    }
+
+    /* caixa de seleção piscando */
+    .word-highlight::before {
+      content: '';
+      position: absolute;
+      inset: -8px -14px;
+      border: 2px dashed var(--green);
+      border-radius: 8px;
+      opacity: 0;
+      box-shadow: 0 0 12px rgba(110,218,69,0.4), inset 0 0 12px rgba(110,218,69,0.05);
+      animation: selectionBlink 3s ease-in-out infinite;
+    }
+
+    /* canto superior direito */
+    .word-highlight::after {
+      content: '';
+      position: absolute;
+      top: -8px; right: -14px;
+      width: 10px; height: 10px;
+      background: var(--green);
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--green);
+      opacity: 0;
+      animation: selectionBlink 3s ease-in-out infinite;
+    }
+
+    /* canto inferior esquerdo via wrapper */
+    .word-wrap::before {
+      content: '';
+      position: absolute;
+      bottom: -8px; left: -14px;
+      width: 10px; height: 10px;
+      background: var(--green);
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--green);
+      opacity: 0;
+      animation: selectionBlink 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes selectionBlink {
+      0%, 100% { opacity: 0; }
+      25%, 75%  { opacity: 1; }
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.45);
+      max-width: 420px;
+      margin: 0 auto 48px;
+    }
+
+    /* CTA principal */
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      background: #fff;
+      border-radius: 100px;
+      padding: 6px 6px 6px 28px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 40px rgba(110,218,69,0.2);
+      margin-bottom: 48px;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(110,218,69,0.35);
+    }
+
+    .hero-cta-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111;
+      padding-right: 20px;
+    }
+
+    .hero-cta-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green);
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .hero-cta:hover .hero-cta-icon { background: #5bc438; }
+
+    /* trust bullets */
+    .trust-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .trust-dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--green);
+      animation: dotPulse 2.5s ease-in-out infinite;
+    }
+
+    .trust-item:nth-child(2) .trust-dot { animation-delay: 0.8s; }
+    .trust-item:nth-child(3) .trust-dot { animation-delay: 1.6s; }
+
+    @keyframes dotPulse {
+      0%, 100% {
+        box-shadow: 0 0 6px var(--green);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 14px var(--green), 0 0 28px rgba(110,218,69,0.5);
+        transform: scale(1.45);
+      }
+    }
+
+    /* ── FLOATING BADGES ── */
+    .badge {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 10px 18px 10px 10px;
+      backdrop-filter: blur(12px);
+      white-space: nowrap;
+    }
+
+    .badge-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(110,218,69,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .badge-icon svg { color: var(--green); }
+
+    .badge-text-wrap { text-align: left; }
+
+    .badge-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .badge-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .badge-left {
+      left: 3vw;
+      top: 42%;
+      animation: floatLeft 5s ease-in-out infinite;
+    }
+
+    .badge-right {
+      right: 3vw;
+      top: 52%;
+      animation: floatRight 6s ease-in-out infinite;
+    }
+
+    @keyframes floatLeft {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50%       { transform: translateY(-14px) rotate(-2deg); }
+    }
+
+    @keyframes floatRight {
+      0%, 100% { transform: translateY(0px) rotate(2deg); }
+      50%       { transform: translateY(-10px) rotate(2deg); }
+    }
+
+    /* linha decorativa */
+    .badge-left::after {
+      content: '';
+      position: absolute;
+      right: -60px; top: 50%;
+      width: 50px; height: 1px;
+      background: linear-gradient(to right, rgba(110,218,69,0.5), transparent);
+    }
+
+    .badge-right::before {
+      content: '';
+      position: absolute;
+      left: -60px; top: 50%;
+      width: 50px; height: 1px;
+      background: linear-gradient(to left, rgba(110,218,69,0.4), transparent);
+    }
+
+    /* ── SEÇÃO PACOTES ── */
+    #pacotes {
+      position: relative;
+      z-index: 1;
+      padding: 40px 24px 100px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    /* ── CARDS ── */
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .card {
+      border-radius: 18px;
+      padding: 32px 28px 28px;
+      position: relative;
+      transition: border-color 0.25s, background 0.25s;
+    }
+
+    .card-verde {
+      background: rgba(110,218,69,0.03);
+      border: 1px solid rgba(110,218,69,0.16);
+    }
+    .card-verde:hover { border-color: rgba(110,218,69,0.38); background: rgba(110,218,69,0.06); }
+
+    .card-roxo {
+      background: rgba(123,94,167,0.04);
+      border: 1px solid rgba(123,94,167,0.22);
+    }
+    .card-roxo:hover { border-color: rgba(123,94,167,0.46); background: rgba(123,94,167,0.08); }
+
+    .card-ia {
+      background: rgba(110,218,69,0.02);
+      border: 1px solid rgba(110,218,69,0.2);
+    }
+    .card-ia:hover { border-color: rgba(110,218,69,0.42); }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .tag-verde { background: rgba(110,218,69,0.1);  color: var(--green); }
+    .tag-roxo  { background: rgba(123,94,167,0.18); color: #b090e0; }
+    .tag-ia    { background: rgba(110,218,69,0.12); color: var(--green); }
+
+    .bonus-badge {
+      position: absolute;
+      top: -13px; right: 22px;
+      background: #FFD84D;
+      color: #1a1200;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 6px 13px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      box-shadow: 0 0 20px rgba(255,216,77,0.35);
+    }
+
+    .bonus-badge::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #FFD84D;
+      border-bottom: none;
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 22px;
+    }
+
+    .card-price {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 22px;
+    }
+
+    .card-price sub {
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0.5;
+      vertical-align: baseline;
+    }
+
+    .price-verde { color: var(--green); }
+    .price-roxo  { color: #b090e0; }
+    .price-ia    { color: rgba(255,255,255,0.75); }
+
+    .card-list {
+      list-style: none;
+      margin-bottom: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-list li {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.65);
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .card-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 7px;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+
+    .card-verde .card-list li::before { background: var(--green); }
+    .card-roxo  .card-list li::before { background: #b090e0; }
+    .card-ia    .card-list li::before { background: var(--green); }
+
+    .card-list li.destaque { color: #FFD84D; font-weight: 700; }
+    .card-list li.destaque::before { background: #FFD84D; }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-verde {
+      background: var(--green);
+      color: #0d1f0a;
+      animation: btnPulseGreen 3s ease-in-out infinite;
+    }
+
+    .btn-roxo {
+      background: var(--purple);
+      color: #fff;
+      animation: btnPulseRoxo 3s ease-in-out infinite;
+    }
+
+    .btn-ia { background: var(--green); color: #0d1f0a; }
+
+    @keyframes btnPulseGreen {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(110,218,69,0); }
+      50%       { box-shadow: 0 0 0 7px rgba(110,218,69,0); }
+      40%       { box-shadow: 0 0 12px 3px rgba(110,218,69,0.35); }
+    }
+
+    @keyframes btnPulseRoxo {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(123,94,167,0); }
+      40%       { box-shadow: 0 0 12px 3px rgba(123,94,167,0.45); }
+      50%       { box-shadow: 0 0 0 7px rgba(123,94,167,0); }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding-bottom: 52px;
+    }
+
+    .footer-handle {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.18);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 680px) {
+      .badge { display: none; }
+      .nav-label { display: none; }
+      .hero { padding: 90px 24px 64px; }
+      .trust-row { gap: 16px; }
+      .trust-item { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- NAV -->
+<nav class="nav">
+  <span class="logo">Agencia Konverte</span>
+  <span class="nav-label">Agência de Marketing</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+
+  <!-- badges flutuantes -->
+  <div class="badge badge-left">
+    <div class="badge-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+      </svg>
+    </div>
+    <div class="badge-text-wrap">
+      <div class="badge-title">Tráfego Pago</div>
+      <div class="badge-sub">Anúncios que convertem</div>
+    </div>
+  </div>
+
+  <div class="badge badge-right">
+    <div class="badge-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    </div>
+    <div class="badge-text-wrap">
+      <div class="badge-title">Mentoria</div>
+      <div class="badge-sub">8 encontros em 60 dias</div>
+    </div>
+  </div>
+
+  <!-- headline -->
+  <p class="hero-eyebrow">Agência de Marketing</p>
+
+  <h1 class="hero-title">
+    Marketing que<br>
+    <span class="word-wrap">
+      <span class="word-highlight" id="animated-word">converte</span>
+    </span>
+    <br>de verdade
+  </h1>
+
+  <p class="hero-sub">
+    Três formas de trabalhar com a Konverte. Escolha o que faz mais sentido pro seu momento.
+  </p>
+
+  <!-- CTA -->
+  <a href="#pacotes" class="hero-cta">
+    <span class="hero-cta-text">Ver os pacotes</span>
+    <span class="hero-cta-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </span>
+  </a>
+
+  <!-- trust -->
+  <div class="trust-row">
+    <div class="trust-item">
+      <span class="trust-dot"></span>
+      Gestão completa
+    </div>
+    <div class="trust-item">
+      <span class="trust-dot"></span>
+      Mentoria
+    </div>
+    <div class="trust-item">
+      <span class="trust-dot"></span>
+      Implementação de IA
+    </div>
+  </div>
+
+</section>
+
+<!-- PACOTES -->
+<section id="pacotes">
+  <div class="section-header">
+    <p class="section-eyebrow">Nossos pacotes</p>
+    <h2 class="section-title">Escolha o seu formato</h2>
+  </div>
+
+  <div class="cards">
+
+    <div class="card card-verde">
+      <span class="tag tag-verde">Gestão Completa</span>
+      <h2 class="card-title">Marketing do início ao fim</h2>
+      <p class="card-desc">Você não tem tempo pra cuidar do marketing enquanto toca o negócio. A gente assume tudo. Do anúncio ao relatório, sem depender de você pra executar.</p>
+      <div class="card-price price-verde">a partir de R$ 2.500<sub>/mês</sub></div>
+      <ul class="card-list">
+        <li>Anúncios que geram clientes, não só cliques</li>
+        <li>Redes sociais ativas sem você precisar lembrar</li>
+        <li>Relatório claro de onde vem o retorno</li>
+        <li>Estratégia contínua alinhada com seu negócio</li>
+      </ul>
+      <a href="https://wa.me/5511998398779?text=Ol%C3%A1!%20Vi%20a%20p%C3%A1gina%20da%20Konverte%20e%20tenho%20interesse%20no%20pacote%20de%20Gest%C3%A3o%20Completa." class="btn btn-verde" target="_blank">Quero saber mais</a>
+    </div>
+
+    <div class="card card-roxo">
+      <div class="bonus-badge">+ site profissional incluso</div>
+      <span class="tag tag-roxo">Mentoria</span>
+      <h2 class="card-title">Aprenda a fazer você mesmo</h2>
+      <p class="card-desc">Já tentou fazer marketing sozinho e não foi pra frente? Em 8 encontros e 60 dias, você aprende o que funciona pra sua realidade, sem gastar errado.</p>
+      <div class="card-price price-roxo">a partir de R$ 997<sub> fixo</sub></div>
+      <ul class="card-list">
+        <li>8 encontros ao longo de 60 dias</li>
+        <li>Estratégia criada pra sua realidade</li>
+        <li>Aprenda a não depender de agência</li>
+        <li>Suporte direto com especialista</li>
+        <li class="destaque">+ site profissional incluso no pacote</li>
+      </ul>
+      <a href="https://wa.me/5511998398779?text=Ol%C3%A1!%20Vi%20a%20p%C3%A1gina%20da%20Konverte%20e%20tenho%20interesse%20na%20Mentoria." class="btn btn-roxo" target="_blank">Quero a mentoria</a>
+    </div>
+
+    <div class="card card-ia">
+      <span class="tag tag-ia">Implementação de IA</span>
+      <h2 class="card-title">IA configurada pra sua operação</h2>
+      <p class="card-desc">Sua equipe ainda faz na mão o que uma IA poderia resolver em segundos? Configuramos um sistema completo pra sua operação, do zero.</p>
+      <div class="card-price price-ia">A combinar</div>
+      <ul class="card-list">
+        <li>Sistema de IA personalizado pro seu negócio</li>
+        <li>Automações que eliminam trabalho manual</li>
+        <li>Treinamento da equipe pra usar tudo</li>
+        <li>Suporte depois da implementação</li>
+      </ul>
+      <a href="formulario-ia.html" class="btn btn-ia">Tenho interesse</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p class="footer-handle">@agencia.konverte</p>
+</footer>
+
+<script>
+  // ── PALAVRAS ANIMADAS ──
+  const words   = ['Konverte', 'cresce', 'vende', 'escala'];
+  const el      = document.getElementById('animated-word');
+  let   current = 0;
+
+  function cycleWord() {
+    el.style.transition = 'opacity 0.35s, transform 0.35s';
+    el.style.opacity    = '0';
+    el.style.transform  = 'translateY(6px)';
+
+    setTimeout(() => {
+      current = (current + 1) % words.length;
+      el.textContent = words[current];
+
+      // destaque extra quando aparece "Konverte"
+      if (words[current] === 'Konverte') {
+        el.style.fontSize = '110%';
+        el.style.letterSpacing = '-0.05em';
+      } else {
+        el.style.fontSize = '';
+        el.style.letterSpacing = '';
+      }
+
+      el.style.opacity   = '1';
+      el.style.transform = 'translateY(0)';
+    }, 360);
+  }
+
+  setInterval(cycleWord, 2800);
+
+  // ── PARTICLES ──
+  const canvas = document.getElementById('particles');
+  const ctx    = canvas.getContext('2d');
+  let W, H, pts;
+
+  const COUNT    = window.innerWidth < 600 ? 35 : 65;
+  const MAX_DIST = 130;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initPts() {
+    pts = Array.from({ length: COUNT }, () => ({
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(110,218,69,0.45)';
+      ctx.fill();
+
+      for (let j = i + 1; j < pts.length; j++) {
+        const q  = pts[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < MAX_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(110,218,69,${0.1 * (1 - d / MAX_DIST)})`;
+          ctx.lineWidth   = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  resize(); initPts(); draw();
+  window.addEventListener('resize', () => { resize(); initPts(); });
+</script>
+
+</body>
+</html>
